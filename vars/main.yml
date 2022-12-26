@@ -1,0 +1,4 @@
+---
+
+letsencrypt_plugin: "apache"
+letsencrypt_deploy_hook: "systemctl restart apache2"

@@ -1,0 +1,47 @@
+---
+- name: Refresh repos and update packages
+  community.general.zypper:
+    name: '*'
+    state: latest
+    update_cache: true
+
+- name: Install letsencrypt
+  ansible.builtin.package:
+    name:
+      - python3-certbot
+      - python3-certbot-apache
+    state: present
+
+- name: Enable additional conf in apache sysconfig
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/apache2
+    regexp: '^APACHE\_CONF\_INCLUDE\_DIRS'
+    line: 'APACHE_CONF_INCLUDE_DIRS="/etc/apache2/conf.d"'
+
+- name: Enable SSL in apache sysconfig
+  ansible.builtin.replace:
+    dest: /etc/sysconfig/apache2
+    backup: yes
+    regexp: '^(APACHE\_SERVER\_FLAGS="(?!.*\bSSL\b).*)(.*")$'
+    replace: '\1 SSL \2'
+
+- name: restart apache to reload changes
+  ansible.builtin.systemd:
+    state: restarted
+    name: apache2
+
+- name: fix up access rights to the letsencrypt folder
+  ansible.builtin.file:
+    path: /var/lib/letsencrypt
+    mode: o=rx
+    recurse: true
+
+- name: Create and Install Cert Using {{ letsencrypt_plugin }} Plugin
+  ansible.builtin.command: "certbot --{{ letsencrypt_plugin }} -d {{ letsencrypt_domains|join(', ') }} -m {{ letsencrypt_mail_address }} --agree-tos --noninteractive --redirect"
+
+- name: Set certbot cronjob for Certificate Auto Renewal
+  ansible.builtin.cron:
+    name: "letsencryptrenewal"
+    special_time: weekly
+    state: present
+    job: "/usr/bin/certbot renew --quiet --apache --deploy-hook \"{{ letsencrypt_deploy_hook}}\""

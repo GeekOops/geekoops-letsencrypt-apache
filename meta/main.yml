@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Florian Goth
+  role_name: letsencrypt
+  namespace: geekoops
+  description: Configurable letsencrypt/certbot setup role
+  issue_tracker_url: "https://github.com/GeekOops/geekoops-letsencrypt-apache/issues"
+
+  license: license MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: opensuse
+      versions:
+#        - 15.3
+        - 15.4
+#    - name: debian
+#      versions:
+#        - bullseye
+
+dependencies: []
