@@ -37,7 +37,7 @@
     recurse: true
 
 - name: Create and Install Cert Using {{ letsencrypt_plugin }} Plugin
-  ansible.builtin.command: "certbot --{{ letsencrypt_plugin }} -d {{ letsencrypt_domains|join(', ') }} -m {{ letsencrypt_mail_address }} --agree-tos --noninteractive --redirect"
+  ansible.builtin.command: "certbot --{{ letsencrypt_plugin }} -d {{ letsencrypt_domains|join(',') }} -m {{ letsencrypt_mail_address }} --agree-tos --noninteractive --redirect --expand"
 
 - name: Set letsencrypt cronjob for Certificate Auto Renewal
   ansible.builtin.cron:
