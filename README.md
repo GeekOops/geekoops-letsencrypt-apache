@@ -27,7 +27,7 @@ Including an example of how to use your role (for instance, with variables passe
       roles:
          - { role: geekoops-letsencrypt-apache, letsencrypt_domains: "www.example.org", letsencrypt_mail_address: "webmaster@example.org" }
 
-An advanced example for the imaginary `jellyfish` test server
+An advanced example for the imaginary `jellyfish` test server. This will create a multi-domain certificate.
 
     - hosts: jellyfish
       roles:
@@ -45,4 +45,5 @@ MIT
 
 # Development
 - It would be nice to switch between nginx and apache
+- Check if the distinction between apache and nginx is still required.
 - Test on 15.3
